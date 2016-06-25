@@ -1,0 +1,22 @@
+{
+	"name": "mreschke/email",
+	"description": "Send email console command",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Matthew Reschke",
+			"email": "mail@mreschke.com"
+		}
+	],
+	"require": {
+		"mailgun/mailgun-php": "~2.0",
+		"symfony/console": "~3.0",
+		"symfony/process": "~3.0",
+		"php-http/guzzle6-adapter": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Mreschke\\Email\\": "src\\"
+		}
+	}
+}
