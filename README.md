@@ -1,6 +1,6 @@
 # Send Email
 
-Send PHP based email using mandril (others soon)
+Send PHP based email using mailgun (others soon)
 
 This is compiled into a single email.phar
 
