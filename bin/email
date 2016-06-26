@@ -1,51 +1,22 @@
 #!/usr/bin/env php
-<?php
-
-use Mreschke\Email\Commands\EmailCommand;
-use Symfony\Component\Console\Application;
+<?php namespace Mreschke\Email;
 
 // Require composer autoloader
 require __DIR__.'/../vendor/autoload.php';
 
-// Define config file
-$userConfig = $_SERVER['HOME']."/.config/mreschke/email";
-$systemConfig = '/etc/mreschke/email';
-$configFile = 'config.php';
+// Define and load config file
+$config = (new LoadConfig())->handle();
 
-if (!file_exists("$userConfig/$configFile") && !file_exists("$systemConfig/$configFile")) {
-	echo "Config not found, new installation.  Creating $userConfig/$configFile\n";
-	echo "You can create a system level config at $systemConfig/$configFile\n";
-	echo "User level config overrides system level config\n";
-	passthru("mkdir -p $userConfig");
-	file_put_contents("$userConfig/$configFile", "<?php
+// Get supplied command line options and arguments
+$opts = (new DefineOptions())->handle($argv);
 
-	return [
-
-		'from' => 'from@example.com',
-
-		// Supported drivers: mailgun
-		'driver' => 'mailgun',
-
-		'mailgun' => [
-			'domain' => 'mailgun.example.com',
-			'secret' => 'xyz'
-		],
-
-	];
-
-");
-
+// Handle help and usage
+if (empty($opts) || isset($opts['h']) || isset($opts['help'])) {
+	exit((new ShowUsage())->handle());
 }
 
-// Require config file (find user or system level configs)
-if (file_exists("$userConfig/$configFile")) {
-	$config = require "$userConfig/$configFile";
-} elseif (file_exists("$systemConfig/$configFile")) {
-	$config = require "$systemConfig/$configFile";
-}
-
-// Run console command
-$app = new Application('Send email', '1.0.0');
-$app->add(new EmailCommand($config));
-#$app->setDefaultCommand('email');
-$app->run();
+// Handle send email
+$driver = ucfirst($config['driver']);
+$class = "Mreschke\Email\Send${driver}Email";
+echo (new $class())->handle($opts, $config);
+echo "\n";
