@@ -18,7 +18,7 @@ Options:
  --subject        Email subject
  --text           Email body (as text not html)
  --html, --body   Email body (as html)
- --file           Add attachment (multiple --file or , separated string of files)
+ --file           Add attachment (multiple --file)
  -v, --version    Show version
  -h, --help       Show help and usage
 
