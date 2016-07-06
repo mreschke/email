@@ -2,6 +2,10 @@
 
 class LoadConfig
 {
+	/**
+	 * Class handler
+	 * @return array
+	 */
 	public function handle()
 	{
 		// Define config file

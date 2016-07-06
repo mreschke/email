@@ -3,13 +3,15 @@
 class SendEmail
 {
 
-	public function handle($opts, $config)
+	/**
+	 * Class handler
+	 * @param  array $options
+	 * @param  array $config
+	 * @return mixed
+	 */
+	public function handle($options, $config)
 	{
-		
+		//
 	}
 
-	protected function value($array, $key)
-	{
-		return isset($array[$key]) ? $array[$key] : null;
-	}
 }

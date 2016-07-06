@@ -5,9 +5,16 @@ use Http\Adapter\Guzzle6\Client as Guzzle;
 
 class SendMailgunEmail extends SendEmail
 {
-	public function handle($opts, $config)
+	/**
+	 * Class handler
+	 * @param  array $options
+	 * @param  array $config
+	 * @return mixed
+	 */
+	public function handle($options, $config)
 	{
-		parent::handle($opts, $config);
+		// Call parent handler
+		parent::handle($options, $config);
 
 		// Config options
 		$driver = 'mailgun';
@@ -15,27 +22,37 @@ class SendMailgunEmail extends SendEmail
 		$domain = $config[$driver]['domain'];
 		$secret = $config[$driver]['secret'];
 
-		// Send mail
+		// Instantiate Mailgun
 		$client = new Guzzle();
 		$mailgun = new Mailgun($secret, $client);
 
-		// Convert command options to mailgun options
-		$options = [];
-		if (isset($from)) $options['from'] = $from;
-		if (isset($opts['subject'])) $options['subject'] = $opts['subject'];
-		if (isset($opts['to'])) $options['to'] = $opts['to'];
-		if (isset($opts['cc'])) $options['cc'] = $opts['cc'];
-		if (isset($opts['bcc'])) $options['bcc'] = $opts['bcc'];
-		if (isset($opts['text'])) $options['text'] = $opts['text'];
-		if (isset($opts['html'])) $options['html'] = $opts['html'];
+		// Convert command line options to mailgun options
+		$mailgunOptions = [];
+		if (isset($from)) $mailgunOptions['from'] = $from;
+		if (isset($options['from'])) $mailgunOptions['from'] = $options['from'];
+		if (isset($options['subject'])) $mailgunOptions['subject'] = $options['subject'];
+		if (isset($options['to'])) $mailgunOptions['to'] = $options['to'];
+		if (isset($options['cc'])) $mailgunOptions['cc'] = $options['cc'];
+		if (isset($options['bcc'])) $mailgunOptions['bcc'] = $options['bcc'];
+		if (isset($options['text'])) $mailgunOptions['text'] = $options['text'];
+		if (isset($options['html'])) $mailgunOptions['html'] = $options['html'];
 
-		// Add any attachments
+		// Mailgun will not send with empty body...lets change that
+		if (isset($mailgunOptions['text']) && $mailgunOptions['text'] == "") $mailgunOptions['text'] = " ";
+		if (isset($mailgunOptions['html']) && $mailgunOptions['html'] == "") $mailgunOptions['html'] = " ";
+
+		#var_dump($mailgunOptions);
+		#exit();
+
+		// Add any file attachments
 		$files = [];
-		if (isset($opts['file'])) $files['attachment'] = $opts['file'];
+		if (isset($options['file'])) $files['attachment'] = $options['file'];
 
 		// Send with mailgun
-		#var_dump($options);exit();
-		$response = $mailgun->sendMessage($domain, $options, $files);
-		return $response->http_response_body->message;
+		$response = $mailgun->sendMessage($domain, $mailgunOptions, $files);
+		$status = $response->http_response_body->message;
+
+		// If there is a mailgun error, it will throw error and die before it returns true
+		return true;
 	}
 }

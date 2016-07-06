@@ -2,7 +2,7 @@
 
 return [
 
-	'from' => 'from@example.com',
+	'from' => 'From Name <from@example.com>',
 
 	// Supported drivers: mailgun
 	'driver' => 'mailgun',

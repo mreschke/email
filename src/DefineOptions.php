@@ -2,15 +2,22 @@
 
 class DefineOptions
 {
+	/**
+	 * Class handler
+	 * @param  array $argv
+	 * @return array
+	 */
 	public function handle($argv)
 	{
-		// All options (- or --)
+		// All available options (- or --)
+		// See http://php.net/manual/en/function.getopt.php
 		$allOptions = [
 			'short' => [
 				'v', // -v version
 				'h', // -h help
 			],
 			'long' => [
+				'from:',
 				'to:',
 				'cc:',
 				'bcc:',
@@ -18,6 +25,7 @@ class DefineOptions
 				'text:',
 				'html:', 'body:',
 				'file:',
+				'driver:',
 				'version',
 				'help'
 			]
@@ -37,7 +45,36 @@ class DefineOptions
 				if (isset($argv[4])) $options['file'] = $argv[4];
 			}
 		}
+
+		// Body is an alias for HTML
+		if (isset($options['body'])) {
+			$options['html'] = $options['body'];
+			unset($options['body']);
+		}
+
+		// Convert any comma separation strings into arrays
+		$this->toArray($options, 'to');
+		$this->toArray($options, 'cc');
+		$this->toArray($options, 'bcc');
+		$this->toArray($options, 'file');
+
+		// Return options
 		return $options;
+	}
+
+	/**
+	 * Convert any comma separated strings into arrays
+	 * @param  array &$options
+	 * @param  string $key
+	 * @return void
+	 */
+	protected function toArray(&$options, $key)
+	{
+		if (isset($options[$key])) {
+			if (is_string($options[$key]) && strpos($options[$key], ',') !== false) {
+				$options[$key]= explode(',', $options[$key]);
+			}
+		}
 	}
 
 }

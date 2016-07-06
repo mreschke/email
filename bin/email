@@ -8,15 +8,32 @@ require __DIR__.'/../vendor/autoload.php';
 $config = (new LoadConfig())->handle();
 
 // Get supplied command line options and arguments
-$opts = (new DefineOptions())->handle($argv);
+$options = (new DefineOptions())->handle($argv);
 
 // Handle help and usage
-if (empty($opts) || isset($opts['h']) || isset($opts['help'])) {
+if (empty($options) || isset($options['h']) || isset($options['help'])) {
 	exit((new ShowUsage())->handle());
 }
 
-// Handle send email
-$driver = ucfirst($config['driver']);
+// Check if body from STDIN
+if (!isset($options['text']) && !isset($options['html'])) {
+	$stdin = '';
+	$fh = fopen('php://stdin', 'r');
+	if($fh) {
+		while ($line = fgets( $fh )) {
+			$stdin .= $line;
+		}
+		fclose($fh);
+	}
+	$options['text'] = $stdin;
+	unset($options['html']);
+}
+
+// Send email through defined mail driver
+$driver = isset($options['driver']) ? ucfirst($options['driver']) : ucfirst($config['driver']);
 $class = "Mreschke\Email\Send${driver}Email";
-echo (new $class())->handle($opts, $config);
+$success = (new $class())->handle($options, $config);
+if ($success) {
+	echo "Email queued successfully!";
+}
 echo "\n";
