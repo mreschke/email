@@ -2,7 +2,7 @@
 
 Send email from the command line using PHP's smtp, mailgun, mandril or other drivers.
 
-	`./email --to=you@mail.com --subject='Test Subject' --body='Test Body'`
+	`email --to=you@mail.com --subject='Test Subject' --body='Test Body'`
 
 
 # Installation
