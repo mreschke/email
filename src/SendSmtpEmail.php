@@ -70,9 +70,13 @@ class SendSmtpEmail extends SendEmail
         }
 
         // Send the message
-        $result = $mailer->send($message);
-
-        // If there is a swift error, it will throw error and die before it returns true
-        return true;
+        if (!$mailer->send($message, $failures)) {
+            echo "Failures:";
+            print_r($failures);
+            return false;
+        } else {
+            // If there is a swift error, it will throw error and die before it returns true
+            return true;
+        }
     }
 }
