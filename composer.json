@@ -10,7 +10,8 @@
 	],
 	"require": {
 		"php-http/guzzle6-adapter": "^1.0",
-		"mailgun/mailgun-php": "~2.0"
+		"mailgun/mailgun-php": "~2.0",
+		"swiftmailer/swiftmailer": "@stable"
 	},
 	"autoload": {
 		"psr-4": {

@@ -16,9 +16,9 @@ This program may be freely redistributed under the terms of the MIT license.
 Send email from the command line using PHP's smtp, mailgun, mandril or other drivers.
 
 Options:
- --to             Add recipients (one or more --file or , separated string)
- --cc             Add cc recipients (one or more --file or , separated string)
- --bcc            Add bcc recipients (one or more --file or , separated string)
+ --to             Add recipients (one or more --to or , separated string)
+ --cc             Add cc recipients (one or more --cc or , separated string)
+ --bcc            Add bcc recipients (one or more --bcc or , separated string)
  --subject        Email subject
  --text           Email body (as text not html)
  --html, --body   Email body (as html)

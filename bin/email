@@ -4,6 +4,9 @@
 // Require composer autoloader
 require __DIR__.'/../vendor/autoload.php';
 
+// Load helpers
+require __DIR__.'/../src/Helpers.php';
+
 // Define and load config file
 $config = (new LoadConfig())->handle();
 
